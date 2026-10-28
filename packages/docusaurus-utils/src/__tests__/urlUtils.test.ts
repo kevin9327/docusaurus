@@ -625,6 +625,17 @@ describe('hasSSHProtocol', () => {
     expect(hasSSHProtocol(url)).toBe(true);
   });
 
+  it('recognizes implied SSH protocol without a user', () => {
+    expect(hasSSHProtocol('github.com:facebook/docusaurus.git')).toBe(true);
+    // An SSH config host alias, as used for several GitHub accounts
+    expect(hasSSHProtocol('github-work:facebook/docusaurus.git')).toBe(true);
+  });
+
+  it('does not recognize a Windows drive path', () => {
+    expect(hasSSHProtocol('C:/projects/docusaurus.git')).toBe(false);
+    expect(hasSSHProtocol('C:\\projects\\docusaurus.git')).toBe(false);
+  });
+
   it('does not recognize HTTPS with credentials', () => {
     const url = 'https://user:pass@github.com/facebook/docusaurus.git';
     expect(hasSSHProtocol(url)).toBe(false);
