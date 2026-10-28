@@ -325,10 +325,12 @@ export function hasSSHProtocol(sourceRepoUrl: string): boolean {
   if (url === null || !sourceRepoUrl.includes('://')) {
     // Recognizes SCP-style addresses, implying SSH
     // Example: git@github.com:facebook/docusaurus.git
-    // A Windows drive path like C:/repo is not one.
+    // Example: github.com:~user/docusaurus.git
+    // A Windows drive path like C:/repo or C:repo is not one: like git on
+    // Windows, a single-letter host is read as a drive letter.
     return (
-      /^(?:[\w-]+@)?[\w.-]+:[\w./-]+/.test(sourceRepoUrl) &&
-      !/^[a-z]:[\\/]/i.test(sourceRepoUrl)
+      /^(?:[\w-]+@)?[\w.-]+:[\w./~-]+/.test(sourceRepoUrl) &&
+      !/^[a-z]:/i.test(sourceRepoUrl)
     );
   }
   return url.protocol === 'ssh:';

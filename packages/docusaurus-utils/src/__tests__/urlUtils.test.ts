@@ -631,9 +631,15 @@ describe('hasSSHProtocol', () => {
     expect(hasSSHProtocol('github-work:facebook/docusaurus.git')).toBe(true);
   });
 
+  it('recognizes implied SSH protocol with a path relative to a home directory', () => {
+    expect(hasSSHProtocol('git@example.com:~git/docusaurus.git')).toBe(true);
+    expect(hasSSHProtocol('example.com:~/docusaurus.git')).toBe(true);
+  });
+
   it('does not recognize a Windows drive path', () => {
     expect(hasSSHProtocol('C:/projects/docusaurus.git')).toBe(false);
     expect(hasSSHProtocol('C:\\projects\\docusaurus.git')).toBe(false);
+    expect(hasSSHProtocol('C:projects/docusaurus.git')).toBe(false);
   });
 
   it('does not recognize HTTPS with credentials', () => {
